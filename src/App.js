@@ -7,6 +7,9 @@ import { increaseCounter, decreaseCounter } from "./action/actions";
 
 import { useSelector, useDispatch } from "react-redux";
 
+import axios from "axios";
+import { useEffect } from "react";
+
 function App(props) {
   const dispatch = useDispatch();
 
@@ -21,6 +24,16 @@ function App(props) {
   const handleDescrease = () => {
     dispatch(decreaseCounter());
   };
+
+  const fetchAllUser = async () => {
+    const res = await axios.get("http://localhost:8080/users/all");
+    const data = res && res.data ? res.data : [];
+    console.log(data);
+  };
+
+  useEffect(() => {
+    fetchAllUser();
+  }, []);
 
   return (
     <div className="App">
