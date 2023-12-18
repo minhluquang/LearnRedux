@@ -1,27 +1,21 @@
 import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 
-import axios from "axios";
-
 import Table from "react-bootstrap/Table";
+import { fetchAllUser } from "../action/actions";
+import { useDispatch, useSelector } from "react-redux";
 
 const TableUser = () => {
-  const [userList, setUserList] = useState([]);
-
-  const fetchAllUser = async () => {
-    const res = await axios.get("http://localhost:8080/users/all");
-    if (res && res.data) {
-      setUserList(res.data);
-    }
-  };
+  const dispatch = useDispatch();
+  const listUsers = useSelector((state) => state.user.listUsers);
 
   useEffect(() => {
-    fetchAllUser();
+    dispatch(fetchAllUser());
   }, []);
 
   const handleDelete = (user) => {
-    console.log(user);    
-  }
+    console.log(user);
+  };
 
   return (
     <Table striped bordered hover className="mt-3">
@@ -34,18 +28,22 @@ const TableUser = () => {
         </tr>
       </thead>
       <tbody>
-        {userList.map((item) => {
-          return (
-            <tr key={`users-${item.id}`}>
-              <td>{item.id}</td>
-              <td>{item.username}</td>
-              <td>{item.email}</td>
-              <td>
-                <Button variant="danger" onClick={() => handleDelete(item)}>Delete</Button>
-              </td>
-            </tr>
-          );
-        })}
+        {listUsers &&
+          listUsers.length > 0 &&
+          listUsers.map((item) => {
+            return (
+              <tr key={`users-${item.id}`}>
+                <td>{item.id}</td>
+                <td>{item.username}</td>
+                <td>{item.email}</td>
+                <td>
+                  <Button variant="danger" onClick={() => handleDelete(item)}>
+                    Delete
+                  </Button>
+                </td>
+              </tr>
+            );
+          })}
       </tbody>
     </Table>
   );
