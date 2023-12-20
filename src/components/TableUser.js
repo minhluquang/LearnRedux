@@ -9,6 +9,9 @@ const TableUser = () => {
   const dispatch = useDispatch();
   const listUsers = useSelector((state) => state.user.listUsers);
 
+  const isLoading = useSelector((state) => state.user.isLoading);
+  const isError = useSelector((state) => state.user.isError);
+
   useEffect(() => {
     dispatch(fetchAllUser());
   }, []);
@@ -28,22 +31,37 @@ const TableUser = () => {
         </tr>
       </thead>
       <tbody>
-        {listUsers &&
-          listUsers.length > 0 &&
-          listUsers.map((item) => {
-            return (
-              <tr key={`users-${item.id}`}>
-                <td>{item.id}</td>
-                <td>{item.username}</td>
-                <td>{item.email}</td>
-                <td>
-                  <Button variant="danger" onClick={() => handleDelete(item)}>
-                    Delete
-                  </Button>
-                </td>
-              </tr>
-            );
-          })}
+        {isError ? (
+          <>Something went wrongs, please try again...</>
+        ) : (
+          <>
+            {isLoading ? (
+              <>Loading...</>
+            ) : (
+              <>
+                {listUsers &&
+                  listUsers.length > 0 &&
+                  listUsers.map((item) => {
+                    return (
+                      <tr key={`users-${item.id}`}>
+                        <td>{item.id}</td>
+                        <td>{item.username}</td>
+                        <td>{item.email}</td>
+                        <td>
+                          <Button
+                            variant="danger"
+                            onClick={() => handleDelete(item)}
+                          >
+                            Delete
+                          </Button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </>
+            )}
+          </>
+        )}
       </tbody>
     </Table>
   );

@@ -6,6 +6,8 @@ import {
 
 const INITIAL_STATE = {
   listUsers: [],
+  isLoading: false,
+  isError: false,
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -15,6 +17,8 @@ const userReducer = (state = INITIAL_STATE, action) => {
 
       return {
         ...state,
+        isLoading: true,
+        isError: false,
       };
 
     case FETCH_USER_SUCCESS:
@@ -23,12 +27,14 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         listUsers: action.dataUsers,
+        isLoading: false,
+        isError: false,
       };
 
     case FETCH_USERS_ERROR:
       console.log("FETCH_USERS_ERROR : ", action);
 
-      return { ...state };
+      return { ...state, isLoading: false, isError: true };
 
     default:
       return state;
