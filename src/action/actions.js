@@ -7,6 +7,9 @@ import {
   CREATE_USERS_REQUEST,
   CREATE_USER_SUCCESS,
   CREATE_USERS_ERROR,
+  DELETE_USERS_REQUEST,
+  DELETE_USER_SUCCESS,
+  DELETE_USERS_ERROR,
 } from "./types.js";
 
 import axios from "axios";
@@ -58,7 +61,7 @@ export const createNewUserRedux = (email, password, username) => {
   return async (dispatch, getState) => {
     dispatch(createUsersRequest());
     try {
-      let res = await axios.post("http://localhost:8080/users/create", {
+      const res = await axios.post("http://localhost:8080/users/create", {
         email,
         password,
         username,
@@ -77,16 +80,52 @@ export const createNewUserRedux = (email, password, username) => {
 
 export const createUsersRequest = () => {
   return {
-    type: CREATE_USERS_REQUEST,
+    type: DELETE_USERS_REQUEST,
   };
 };
 
 export const createUsersSuccess = () => {
-  return { type: CREATE_USER_SUCCESS };
+  return { type: DELETE_USER_SUCCESS };
 };
 
 export const createUsersError = () => {
   return {
-    type: CREATE_USERS_ERROR,
+    type: DELETE_USERS_ERROR,
+  };
+};
+
+// Delete users
+export const deleteUserRedux = (id) => {
+  return async (dispatch, getState) => {
+    dispatch(deleteUsersRequest());
+    try {
+      const res = await axios.post(`http://localhost:8080/users/delete/${id}`, {
+        id,
+      });
+
+      if (res && res.data.errCode === 0) {
+        dispatch(deleteUsersSuccess());
+        dispatch(fetchAllUser());
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(deleteUsersError());
+    }
+  };
+};
+
+export const deleteUsersRequest = () => {
+  return {
+    type: DELETE_USERS_REQUEST,
+  };
+};
+
+export const deleteUsersSuccess = () => {
+  return { type: DELETE_USER_SUCCESS };
+};
+
+export const deleteUsersError = () => {
+  return {
+    type: DELETE_USERS_ERROR,
   };
 };
